@@ -1,7 +1,10 @@
 'use client'
 
+import axios from 'axios'
+import { signIn } from 'next-auth/react'
 import { useCallback, useState } from 'react'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
+import { toast } from "react-hot-toast"
 import { BsGithub, BsGoogle } from 'react-icons/bs'
 
 import Input from '@/app/components/inputs/Input'
@@ -34,12 +37,59 @@ function AuthForm() {
     },
   })
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true)
+
+    if (variant === 'REGISTER') {
+      try {
+        await axios.post('/api/register', data)
+        toast.success('User created')
+      } catch (error: any) {
+        toast.error('Something went wrong')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    if (variant === 'LOGIN') {
+      try {
+        const callback = await signIn('credentials', {
+          ...data,
+          redirect: false
+        })
+
+        if (callback?.error) {
+          toast.error('Invalid credentials')
+        }
+
+        if (callback?.ok && !callback?.error) {
+          toast.success('Logged in')
+        }
+      } catch {
+      } finally {
+        setIsLoading(false)
+      }
+    }
   }
 
-  const socialAction = (action: string) => {
+  const socialAction = async (action: string) => {
     setIsLoading(true)
+
+    try {
+      const callback = await signIn(action, { redirect: false })
+
+      if (callback?.error) {
+        toast.error('Invalid credentials')
+      }
+
+      if (callback?.ok && !callback?.error) {
+        toast.success('Logged in')
+      }
+    } catch {
+    } finally {
+      setIsLoading(false)
+    }
+
   }
 
   return (
