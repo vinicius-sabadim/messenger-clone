@@ -1,11 +1,11 @@
 'use client'
 
 import axios from 'axios'
-import { useRouter } from "next/navigation"
+import { useRouter } from 'next/navigation'
 import { signIn, useSession } from 'next-auth/react'
 import { useCallback, useEffect, useState } from 'react'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
-import { toast } from "react-hot-toast"
+import { toast } from 'react-hot-toast'
 import { BsGithub, BsGoogle } from 'react-icons/bs'
 
 import Input from '@/app/components/inputs/Input'
@@ -65,7 +65,7 @@ function AuthForm() {
       try {
         const callback = await signIn('credentials', {
           ...data,
-          redirect: false
+          redirect: false,
         })
 
         if (callback?.error) {
@@ -99,7 +99,6 @@ function AuthForm() {
     } finally {
       setIsLoading(false)
     }
-
   }
 
   return (
