@@ -1,5 +1,3 @@
-'use client'
-
 import EmptyState from '@/app/components/EmptyState'
 
 function Users() {
